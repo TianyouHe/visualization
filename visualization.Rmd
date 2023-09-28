@@ -157,3 +157,8 @@ ggp_weather
 ggsave("results/ggp_weather.pdf", ggp_weather) #前面这个市命名，然后后面是你选择的图
 ```
 
+```{r, fig.width = 6, fig.asp = .6} 
+#上面这个就是定义图的大小, asp 是aspect ratio
+ggp_weather
+```
+
