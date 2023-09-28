@@ -4,7 +4,7 @@ output: github_document
 editor_options: 
   chunk_output_type: console
 ---
-
+#总结：先用ggplot定义，然后在geom 去选择想要的图
 ```{r}
 library(tidyverse)
 library(ggridges)
@@ -70,5 +70,90 @@ ggplot(weather_df, aes(x = tmin, y = tmax, color = name)) +
   geom_point(alpha = .3)+
   geom_smooth() + 
   facet_grid(. ~ name) #这个点可以随便改，主要是看需要什么变量
+```
+
+let's try a different plot. temps are boring
+
+```{r}
+ggplot(weather_df, aes( x = date, y = tmax, color = name)) + 
+  geom_point(aes(size = prcp,alpha = .3))+
+  geom_smooth()+
+  facet_grid(. ~ name)
+```
+
+try assiging a specific color （一般用不到，不需要手动去设置颜色）
+
+```{r}
+weather_df |>
+  filter(name =="CentralPark_NY")|>
+  ggplot(aes(x = date, y = tmax, color = name))+
+  geom_point(alpha = .7, size = .5)
+```
+
+
+
+```{r}
+weather_df |>
+  ggplot(aes(x = tmin, y = tmax))+
+  geom_point(alpha = .3)+
+  geom_hex()
+#炫酷的图
+
+```
+
+```{r}
+weather_df |>
+  filter(name =="Molokai_HI")|>
+  ggplot(aes(x = date, y = tmax))+
+  geom_line(alpha = .5)+ # occasionally helpful
+  geom_point(size = .5)
+```
+
+
+## univariate plotting
+
+histogram
+```{r}
+ggplot(weather_df, aes(x= tmax, color = name))+ #填颜色的时候可以把color换成fill，那是全填充，color就是看上去比较炫酷
+  geom_histogram(position = "dodge")
+```
+##density plot
+```{r}
+ggplot(weather_df, aes(x= tmax, fill = name))+ #填颜色的时候可以把color换成fill，那是全填充，color就是看上去比较炫酷
+  geom_density(alpha = .3, adjust = 2) #alpha 就是填充度，调颜色深浅的
+```
+
+##box plots
+
+```{r}
+ggplot(weather_df, aes(y = tmax, x = name)) + 
+  geom_boxplot()
+```
+
+```{r}
+ggplot(weather_df, aes(y = tmax, x = name)) + 
+  geom_violin() +#算是一种类似于boxplot的图
+  stat_summary(fun = "median", color = "blue")
+```
+
+ridge plot
+
+```{r}
+ggplot(weather_df, aes(x = tmax, y = name))+
+  geom_density_ridges()#generate density vertically
+```
+
+
+##saving and embedding plots
+
+```{r}
+ggp_weather = #你如果在这里定义的话，你就能在environment里找到你想要的图
+  weather_df|>
+  ggplot(aes(x = tmin, y = tmax))+
+  geom_point()
+
+ggp_weather
+
+ggsave("results/ggp_weather.pdf", ggp_weather) #前面这个市命名，然后后面是你选择的图
 ```
 
